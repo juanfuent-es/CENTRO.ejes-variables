@@ -9,31 +9,55 @@ La tipografía objeto de estudio fue "Open Sans" importada desde google fonts, e
 
 A través de ejercicios en HTML, CSS y SVG, se exploran métodos de distribución proporcional de texto por filas y módulos, emulando la estructura de los sistemas de transporte urbano y evidenciando cómo la tipografía variable puede operar como un sistema adaptable dentro del diseño visual contemporáneo, manteniendo la legibilidad y aplicando correcto escalado sin necesidad de recurrir a la deformación estética o la compresión manual.
 
-## p5.variableFont.js - Extensión para p5.js
-
-Este proyecto incluye una extensión nativa de p5.js para trabajar con fuentes variables de manera funcional y eficiente.
-
 ### Características
 
-- ✅ **Carga de fuentes variables**: Soporte para TTF, OTF, WOFF, WOFF2
-- ✅ **Medición precisa**: Métodos para medir ancho, alto y métricas completas de texto
-- ✅ **Control de ejes variables**: Lectura y configuración de ejes (wght, wdth, opsz, etc.)
-- ✅ **Ajuste automático**: `textFit()` y `textFitMultiline()` para ajustar texto a contenedores
-- ✅ **Interpolación**: Interpolación suave entre configuraciones de ejes
-- ✅ **Compatible con p5.js v2.0+**: Integración nativa con p5.js
+- **Carga de fuentes variables**: Soporte para TTF, OTF
+- **Medición precisa**: Métodos para medir ancho, alto y métricas completas de texto
+- **Control de ejes variables**: Lectura y configuración de ejes (wght, wdth, opsz, etc.)
+- **Ajuste automático**: `textFit()` y `textFitMultiline()` para ajustar texto a contenedores
+- **Interpolación**: Interpolación suave entre configuraciones de ejes
+
+### Clases
++ VFont
+- Carga de tipografía vía LoadFont (Typr.js required)
+- Lectura de ejes
+- Generación de variables
+- Cálculo de textos/glifos variables
+
+Ej:
+```js
+function preload() {
+  fontVariable = loadVariableFont('/assets/OpenSans.ttf'); //otf, ttf
+}
+```
+
++ VGlyph
+- Permite 
+
++ VText
+- Permite dibujar textos con diferentes parámetros variables y actualizarlos en tiempo real para dibujarlos
+- Exportación a SVG
+- Exportación a PNG
+- Convertir a Puntos
+
+```js
+textFont('Hubot Sans');
+textSize(24);
+vText('hi', 35, 55, {
+  wdth: 200,
+  wgth: 900
+});
+```
+
+### Demos
+- FitText
 
 ### Instalación
 
 ```html
-<!-- Cargar p5.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-
 <!-- Cargar Typr.js (requerido) -->
 <script src="https://cdn.jsdelivr.net/gh/photopea/Typr.js@gh-pages/src/Typr.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/photopea/Typr.js@gh-pages/src/Typr.U.js"></script>
-
-<!-- Cargar la extensión -->
-<script src="src/p5.variableFont.js"></script>
 ```
 
 ### Uso Básico
@@ -108,10 +132,9 @@ Ver [API.md](API.md) para documentación completa de la API.
 
 ### Tecnologías Utilizadas
 
-- **p5.js**: Biblioteca de JavaScript para programación creativa
 - **Typr.js**: Parser de fuentes en JavaScript (ligero y rápido)
 - **Fuentes Variables**: OpenType Variable Fonts
 
 ### Licencia
 
-GPL-3.0
+GNU-3.0
