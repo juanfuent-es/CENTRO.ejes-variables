@@ -24,6 +24,8 @@ export default class Variation {
         this.fontSize = params.fontSize || 300;
         this.wght = params.wght;
         this.wdth = params.wdth;
+        this.slnt = params.slnt;
+        this.ital = params.ital;
         this.customLineHeightRatio = typeof params.lineHeight === 'number' ? params.lineHeight : null;
         this.glyphs = [];
         this.ready = false;
@@ -116,7 +118,33 @@ export default class Variation {
         if (this.font.hasAxis('wdth') && typeof this.wdth !== 'undefined') {
             axes.wdth = this.wdth;
         }
+        if (this.font.hasAxis('slnt') && typeof this.slnt !== 'undefined') {
+            axes.slnt = this.slnt;
+        }
+        if (this.font.hasAxis('ital') && typeof this.ital !== 'undefined') {
+            axes.ital = this.ital;
+        }
         return axes;
+    }
+
+    /**
+     * Devuelve la definición de los ejes variables disponibles en la fuente.
+     * Estructura habitual:
+     * {
+     *   wght: { min: Number, max: Number, default: Number },
+     *   wdth: { min: Number, max: Number, default: Number },
+     *   ...
+     * }
+     * Si la fuente aún no está cargada, devuelve un objeto vacío.
+     */
+    getAxes() {
+        if (!this.font || typeof this.font.isLoaded !== 'function' || !this.font.isLoaded()) {
+            return {};
+        }
+        if (typeof this.font.getAxes === 'function') {
+            return this.font.getAxes();
+        }
+        return {};
     }
 
     getTextWidth() {
