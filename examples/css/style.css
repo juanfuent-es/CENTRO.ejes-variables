@@ -1,0 +1,29 @@
+/* ============================================
+   VARIABLES DE BREAKPOINTS Y COLORES BASE
+============================================ */
+:root {
+    /* Colores base inspirados en tránsito urbano */
+    --color-black: #212121;
+    /* Asfalto urbano */
+    --color-white: #f0f0f0;
+    /* Blanco puro */
+    --color-orange: #F47C20;
+    /* Naranja del Metro CDMX */
+    --color-pink: #EC407A;
+    /* Rosa de taxis */
+    --color-green: #2E7D32;
+    /* Verde de señalamientos */
+    --color-red: #D32F2F;
+    /* Rojo de alto */
+    --color-blue: #0D47A1;
+    /* Azul de señalamientos */
+}
+
+body {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-family);
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
