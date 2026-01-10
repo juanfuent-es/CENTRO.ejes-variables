@@ -1,5 +1,5 @@
 {
-  "name": "VFont",
+  "name": "vfont",
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,8 +13,20 @@
     "variable-axes"
   ],
   "author": "JuanFuent.es",
-  "license": "GNU General Public License v3.0",
-  "dependencies": {},
-  "devDependencies": {}
+  "license": "SEE LICENSE IN <license>",
+  "devDependencies": {},
+  "description": "La tipografía variable como herramienta funcional para el diseño de la señalética del transporte de CDMX.",
+  "main": "Typr.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juanfuent-es/CENTRO.ejes-variables.git"
+  },
+  "bugs": {
+    "url": "https://github.com/juanfuent-es/CENTRO.ejes-variables/issues"
+  },
+  "homepage": "https://github.com/juanfuent-es/CENTRO.ejes-variables#readme"
 }
-

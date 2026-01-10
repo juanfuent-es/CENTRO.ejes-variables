@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitText - Ejes Variables</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,GRAD,ROND@6..144,-10..0,25..151,1..1000,0..100,0..100&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/dist/lil-gui.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>FitText - Ajuste de Texto con Fuentes Variables</h1>
+
+    <div class="info">
+        <p>Este ejemplo demuestra el uso de FitText para ajustar texto usando Google Sans Flex con 6 ejes variables.</p>
+        <p>Usa los controles GUI para ajustar Slant y Roundness en tiempo real.</p>
+    </div>
+
+    <div class="container example-container-1">
+        <h1 class="fit-text-container" id="fit-text-1" data-relevance="0.8">INSURGENTES</h1>
+    </div>
+
+    <div class="container example-container-2">
+        <h2 class="fit-text-container" id="fit-text-2" data-relevance="0.5">CENTRO</h2>
+    </div>
+
+    <div class="container example-container-3">
+        <h3 class="fit-text-container" id="fit-text-3" data-relevance="0.3">CDMX</h3>
+    </div>
+
+    <script type="module">
+        import FitText from './src/FitText.js';
+        import { GUIController } from './src/fitText/GUIController.js';
+
+        // Inicializar FitText para cada contenedor
+        const container1 = document.getElementById('fit-text-1');
+        const container2 = document.getElementById('fit-text-2');
+        const container3 = document.getElementById('fit-text-3');
+
+        const fitText1 = new FitText(container1);
+        const fitText2 = new FitText(container2);
+        const fitText3 = new FitText(container3);
+
+        // Ejecutar ajuste inicial
+        fitText1.fit();
+        fitText2.fit();
+        fitText3.fit();
+
+        // Crear GUI para controlar slant y roundness
+        if (typeof window.lil !== 'undefined' && window.lil.GUI) {
+            const gui = new window.lil.GUI();
+            
+            // GUI controlará todas las instancias de FitText
+            const guiController = new GUIController(gui, {
+                fitTextInstance: fitText1, // Principal
+                initialSlant: -5,
+                initialRoundness: 0,
+                onUpdate: (values) => {
+                    // Actualizar todas las instancias cuando cambien los valores GUI
+                    fitText1.update({ slnt: values.slnt, ROND: values.ROND });
+                    fitText2.update({ slnt: values.slnt, ROND: values.ROND });
+                    fitText3.update({ slnt: values.slnt, ROND: values.ROND });
+                }
+            });
+        }
+
+        // Manejar redimensionamiento de ventana
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                fitText1.fit();
+                fitText2.fit();
+                fitText3.fit();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

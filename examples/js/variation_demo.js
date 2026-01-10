@@ -1,21 +1,15 @@
-import Variation from '../../src/variation.js';
+import VFont from '../../src/VFont.Core.js';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 
-const variation = new Variation({
-    font: './fonts/MonaSans-VF.ttf',
-    txt: 'EJES VARIABLES',
-    fontSize: 100,
-    wght: 800,
-    wdth: 600,
-    slnt: 0,
-    ital: 0,
-    lineHeight: 0.8
-});
+// Controles GUI (lil-gui)
+const gui = new window.lil.GUI();
 
-variation.whenReady(() => {
+const font = new VFont('../fonts/EcosDelAnden-VF.woff2');
+
+font.loaded(() => {
     console.log('Font loaded', variation.getAxes());
     resizeCanvas();
     render();

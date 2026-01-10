@@ -91,7 +91,7 @@ export default class Variation {
         glyph.draw(ctx, { offset_x: offsetX, offset_y: offsetY });
     }
 
-    whenReady(callback) {
+    loaded(callback) {
         if (typeof callback !== 'function') return;
         if (this.ready) {
             callback(this);
@@ -154,5 +154,58 @@ export default class Variation {
 
     getLineHeight() {
         return this.fontSize * this.currentLineHeightRatio;
+    }
+
+    /**
+     * Actualiza las propiedades de la instancia (texto, tamaño, ejes, etc.)
+     * y regenera los glifos. Pensado para ser llamado desde lil.gui.
+     *
+     * @param {Object} params
+     *  - txt: string
+     *  - fontSize: number
+     *  - lineHeight: number (ratio)
+     *  - wght, wdth, slnt, ital, ...: valores de ejes
+     */
+    update(params = {}) {
+        if (!params || typeof params !== 'object') return;
+
+        // Texto
+        if (typeof params.txt === 'string') {
+            this.txt = params.txt;
+        }
+
+        // Tamaño de fuente
+        if (typeof params.fontSize === 'number') {
+            this.fontSize = params.fontSize;
+        }
+
+        // Altura de línea (ratio)
+        if (typeof params.lineHeight === 'number') {
+            this.customLineHeightRatio = params.lineHeight;
+            this.currentLineHeightRatio = this.customLineHeightRatio || this.fontLineHeightRatio;
+        }
+
+        // Ejes específicos
+        ['wght', 'wdth', 'slnt', 'ital'].forEach(axis => {
+            if (Object.prototype.hasOwnProperty.call(params, axis)) {
+                this[axis] = params[axis];
+            }
+        });
+
+        // Cualquier otro eje soportado por la fuente
+        if (this.font && typeof this.font.getAxes === 'function') {
+            const axes = this.font.getAxes();
+            Object.keys(params).forEach(key => {
+                if (axes[key] && !['wght', 'wdth', 'slnt', 'ital', 'txt', 'fontSize', 'lineHeight'].includes(key)) {
+                    this[key] = params[key];
+                }
+            });
+        }
+
+        // Recalcular glifos si la fuente está lista
+        if (this.font && typeof this.font.isLoaded === 'function' && this.font.isLoaded()) {
+            const glyphData = this.font.textVariation(this.txt, this.variation);
+            this.createGlyphs(glyphData);
+        }
     }
 }
