@@ -188,7 +188,6 @@ export default class FitText {
 
     this.styleApplier.applyFontSize(this.element, fontSize);
     this.styleApplier.applyAxisValues(this.element, finalAxes);
-    this.styleApplier.applyFlexLayout(this.element, needsFlex);
   }
 
   /**
