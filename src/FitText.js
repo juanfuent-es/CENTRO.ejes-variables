@@ -103,13 +103,42 @@ export default class FitText {
    * Ejecuta el algoritmo completo de ajuste de texto
    */
   fit() {
-    // Obtener dimensiones del contenedor
-    const containerRect = this.element.getBoundingClientRect();
-    const containerWidth = containerRect.width;
-    const containerHeight = containerRect.height;
+    // Obtener el contenedor padre real que tiene las dimensiones físicas
+    // El elemento .fit-text-container puede tener width: auto, así que medimos el padre
+    const parentContainer = this.element.parentElement;
+    
+    // Si no hay padre, usar el elemento mismo
+    if (!parentContainer) {
+      console.warn('FitText: no se encontró contenedor padre');
+      return;
+    }
+
+    // Obtener dimensiones del contenedor padre (el que tiene dimensiones reales)
+    const parentRect = parentContainer.getBoundingClientRect();
+    const computedStyle = getComputedStyle(parentContainer);
+    
+    // Calcular dimensiones disponibles restando padding y border
+    const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+    const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+    const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+    const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+    const borderLeft = parseFloat(computedStyle.borderLeftWidth) || 0;
+    const borderRight = parseFloat(computedStyle.borderRightWidth) || 0;
+    const borderTop = parseFloat(computedStyle.borderTopWidth) || 0;
+    const borderBottom = parseFloat(computedStyle.borderBottomWidth) || 0;
+    
+    const containerWidth = parentRect.width - paddingLeft - paddingRight - borderLeft - borderRight;
+    const containerHeight = parentRect.height - paddingTop - paddingBottom - borderTop - borderBottom;
 
     if (containerWidth <= 0 || containerHeight <= 0) {
-      console.warn('FitText: dimensiones del contenedor inválidas');
+      console.warn('FitText: dimensiones del contenedor inválidas', { 
+        containerWidth, 
+        containerHeight,
+        parentWidth: parentRect.width,
+        parentHeight: parentRect.height,
+        padding: { paddingLeft, paddingRight, paddingTop, paddingBottom },
+        border: { borderLeft, borderRight, borderTop, borderBottom }
+      });
       return;
     }
 
@@ -126,68 +155,244 @@ export default class FitText {
       ROND: this.currentAxes.ROND ?? this.calculator.axisRanges.ROND.default
     };
 
-    // 3. Calcular fontSize máximo que no desborda ancho
+    // 3. Calcular fontSize y ajustar weight/width adaptativamente si es necesario
+    // Función para medir el ancho real del contenido del elemento
     const measureWidthCallback = (fontSize, axes) => {
+      // Aplicar estilos temporalmente
       this.styleApplier.applyFontSize(this.element, fontSize);
       this.styleApplier.applyAxisValues(this.element, axes);
+      
       // Forzar reflow para que los cambios se apliquen
       void this.element.offsetWidth;
-      const width = this.measurer.measureWidth(this.element);
-      return width;
+      
+      // Medir el ancho real del contenido (no el contenedor con width: auto)
+      // Sumar el ancho de todos los spans
+      let totalWidth = 0;
+      this.charSpans.forEach(span => {
+        const spanRect = span.getBoundingClientRect();
+        totalWidth += spanRect.width;
+      });
+      
+      // Si no hay spans o la suma es 0, usar la medición del elemento
+      if (totalWidth === 0) {
+        totalWidth = this.measurer.measureWidth(this.element);
+      }
+      
+      return totalWidth;
     };
 
-    const fontSize = this.calculator.calculateMaxFontSize(
-      containerHeight,
-      containerWidth,
-      measureWidthCallback,
-      initialAxes
-    );
+    // Calcular valores iniciales basados en relevance
+    let currentWeight = weight;
+    let currentGrade = grade;
+    let optimalWidth = this.calculator.axisRanges.wdth.default;
+    let fontSize;
+    let textWidth;
+    let iterations = 0;
+    const maxIterations = 30;
+    const widthTolerance = 2; // 2px de tolerancia
 
-    // 4. Calcular width óptimo con fontSize determinado
+    // Función helper para medir con ejes dados (igual que measureWidthCallback)
     const measureWidthForWidthCalc = (fontSize, axes) => {
       this.styleApplier.applyFontSize(this.element, fontSize);
       this.styleApplier.applyAxisValues(this.element, axes);
       void this.element.offsetWidth;
-      return this.measurer.measureWidth(this.element);
+      
+      // Medir el ancho real del contenido sumando los spans
+      let totalWidth = 0;
+      this.charSpans.forEach(span => {
+        const spanRect = span.getBoundingClientRect();
+        totalWidth += spanRect.width;
+      });
+      
+      if (totalWidth === 0) {
+        totalWidth = this.measurer.measureWidth(this.element);
+      }
+      
+      return totalWidth;
     };
 
-    const optimalWidth = this.calculator.calculateOptimalWidth(
-      containerWidth,
-      measureWidthForWidthCalc,
-      fontSize,
-      {
-        wght: initialAxes.wght,
-        GRAD: initialAxes.GRAD,
-        slnt: initialAxes.slnt,
-        ROND: initialAxes.ROND
-      }
-    );
-
-    // 7. Construir ejes finales
-    const finalAxes = {
-      wght: initialAxes.wght,
-      GRAD: initialAxes.GRAD,
+    // Primera pasada: calcular fontSize y width con valores iniciales de relevance
+    let currentAxes = {
+      wght: currentWeight,
+      GRAD: currentGrade,
       wdth: optimalWidth,
       slnt: initialAxes.slnt,
       ROND: initialAxes.ROND
     };
 
-    // 8. Verificar si necesita flex layout
+    fontSize = this.calculator.calculateMaxFontSize(
+      containerHeight,
+      containerWidth,
+      measureWidthCallback,
+      currentAxes
+    );
+
+    optimalWidth = this.calculator.calculateOptimalWidth(
+      containerWidth,
+      measureWidthForWidthCalc,
+      fontSize,
+      {
+        wght: currentWeight,
+        GRAD: currentGrade,
+        slnt: initialAxes.slnt,
+        ROND: initialAxes.ROND
+      }
+    );
+
+    // Aplicar y medir resultado inicial (medir ancho real del contenido)
+    currentAxes.wdth = optimalWidth;
+    this.styleApplier.applyFontSize(this.element, fontSize);
+    this.styleApplier.applyAxisValues(this.element, currentAxes);
+    void this.element.offsetWidth;
+    
+    // Medir ancho real sumando spans
+    textWidth = 0;
+    this.charSpans.forEach(span => {
+      const spanRect = span.getBoundingClientRect();
+      textWidth += spanRect.width;
+    });
+    
+    if (textWidth === 0) {
+      textWidth = this.measurer.measureWidth(this.element);
+    }
+
+    // Si desborda, reducir progresivamente weight, grade y width
+    // Guardar fontSize inicial como límite máximo para evitar que crezca demasiado
+    const maxAllowedFontSize = fontSize;
+    
+    while (textWidth > containerWidth + widthTolerance && iterations < maxIterations) {
+      const wghtRange = this.calculator.axisRanges.wght;
+      const wdthRange = this.calculator.axisRanges.wdth;
+      const gradRange = this.calculator.axisRanges.GRAD;
+
+      // Calcular cuánto reducir basado en el desbordamiento
+      const overflowAmount = textWidth - containerWidth;
+      const overflowRatio = Math.min(1, overflowAmount / containerWidth);
+
+      // Reducir weight proporcionalmente (más agresivo si hay mucho desbordamiento)
+      if (currentWeight > wghtRange.min) {
+        const weightStep = Math.max(20, Math.floor((currentWeight - wghtRange.min) * 0.15 * overflowRatio));
+        currentWeight = Math.max(wghtRange.min, currentWeight - weightStep);
+      }
+
+      // Reducir grade proporcionalmente
+      if (currentGrade > gradRange.min) {
+        const gradeStep = Math.max(10, Math.floor((currentGrade - gradRange.min) * 0.15 * overflowRatio));
+        currentGrade = Math.max(gradRange.min, currentGrade - gradeStep);
+      }
+
+      // Reducir width proporcionalmente
+      if (optimalWidth > wdthRange.min) {
+        const widthStep = Math.max(5, Math.floor((optimalWidth - wdthRange.min) * 0.2 * overflowRatio));
+        optimalWidth = Math.max(wdthRange.min, optimalWidth - widthStep);
+      }
+
+      // Recalcular fontSize con los nuevos valores, pero limitado al máximo anterior
+      currentAxes = {
+        wght: currentWeight,
+        GRAD: currentGrade,
+        wdth: optimalWidth,
+        slnt: initialAxes.slnt,
+        ROND: initialAxes.ROND
+      };
+
+      // Calcular nuevo fontSize pero limitarlo al máximo anterior para evitar que crezca
+      const calculatedFontSize = this.calculator.calculateMaxFontSize(
+        containerHeight,
+        containerWidth,
+        measureWidthCallback,
+        currentAxes
+      );
+      // No permitir que fontSize sea mayor que el máximo inicial
+      fontSize = Math.min(calculatedFontSize, maxAllowedFontSize);
+
+      // Recalcular width óptimo con nuevo fontSize
+      optimalWidth = this.calculator.calculateOptimalWidth(
+        containerWidth,
+        measureWidthForWidthCalc,
+        fontSize,
+        {
+          wght: currentWeight,
+          GRAD: currentGrade,
+          slnt: initialAxes.slnt,
+          ROND: initialAxes.ROND
+        }
+      );
+
+      // Aplicar y medir el ancho real del contenido
+      currentAxes.wdth = optimalWidth;
+      this.styleApplier.applyFontSize(this.element, fontSize);
+      this.styleApplier.applyAxisValues(this.element, currentAxes);
+      void this.element.offsetWidth;
+      
+      // Medir ancho real sumando spans
+      textWidth = 0;
+      this.charSpans.forEach(span => {
+        const spanRect = span.getBoundingClientRect();
+        textWidth += spanRect.width;
+      });
+      
+      if (textWidth === 0) {
+        textWidth = this.measurer.measureWidth(this.element);
+      }
+
+      // Si ya no podemos reducir más los ejes y sigue desbordando, reducir fontSize directamente
+      if (textWidth > containerWidth + widthTolerance && 
+          currentWeight <= wghtRange.min + 50 && 
+          currentGrade <= gradRange.min + 10 && 
+          optimalWidth <= wdthRange.min + 10) {
+        fontSize = Math.max(this.options.minFontSize, fontSize - 1);
+        this.styleApplier.applyFontSize(this.element, fontSize);
+        void this.element.offsetWidth;
+        
+        // Medir ancho real después de reducir fontSize
+        textWidth = 0;
+        this.charSpans.forEach(span => {
+          const spanRect = span.getBoundingClientRect();
+          textWidth += spanRect.width;
+        });
+        
+        if (textWidth === 0) {
+          textWidth = this.measurer.measureWidth(this.element);
+        }
+      }
+
+      iterations++;
+    }
+
+    // Los ejes finales ya están en currentAxes, pero asegurémonos de que estén sincronizados
+    const finalAxes = {
+      wght: currentWeight,
+      GRAD: currentGrade,
+      wdth: optimalWidth,
+      slnt: initialAxes.slnt,
+      ROND: initialAxes.ROND
+    };
+
+    // Aplicar estilos finales
     this.styleApplier.applyFontSize(this.element, fontSize);
     this.styleApplier.applyAxisValues(this.element, finalAxes);
-    void this.element.offsetWidth; // Forzar reflow
+    void this.element.offsetWidth;
+
+    // Medir ancho final real del contenido después de aplicar todos los estilos
+    let finalTextWidth = 0;
+    this.charSpans.forEach(span => {
+      const spanRect = span.getBoundingClientRect();
+      finalTextWidth += spanRect.width;
+    });
     
-    const finalTextWidth = this.measurer.measureWidth(this.element);
+    if (finalTextWidth === 0) {
+      finalTextWidth = this.measurer.measureWidth(this.element);
+    }
+
+    // Verificar si necesita flex layout (solo si hay espacio extra y ejes están altos)
     const needsFlex = finalTextWidth < containerWidth * 0.98 && 
                      this.calculator.areAxesMaximized(finalAxes);
 
-    // 9. Aplicar estilos finales
+    // Guardar estado final
     this.currentAxes = finalAxes;
     this.currentFontSize = fontSize;
     this.flexEnabled = needsFlex;
-
-    this.styleApplier.applyFontSize(this.element, fontSize);
-    this.styleApplier.applyAxisValues(this.element, finalAxes);
   }
 
   /**
