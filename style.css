@@ -4,6 +4,13 @@
     box-sizing: border-box;
 }
 
+:root {
+    --yellow: #ffe600;
+    --orange: #ff6500;
+    --pink: #ff0081;
+    --green: #00ff06;
+}
+
 @font-face {
     font-family: 'Google Sans Flex';
     src: url('./fonts/GoogleSansFlex.ttf') format('truetype');
@@ -67,16 +74,25 @@ body {
 }
 
 .example-container-1 {
-    height: 250px;
+    height: 150px;
+    color: var(--orange);
 }
 
 .example-container-2 {
     width: 100%;
     height: 250px;
+    color: var(--yellow);
 }
 
 .example-container-3 {
     height: 600px;
+    color: var(--green);
+}
+
+.example-container-4 {
+    height: 150px;
+    color: var(--pink);
+    text-transform: uppercase;
 }
 
 .info {
