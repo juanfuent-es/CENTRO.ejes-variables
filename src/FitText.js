@@ -17,8 +17,8 @@ export default class FitText {
     this.options = {
       fontFamily: options.fontFamily || 'Google Sans Flex, sans-serif',
       relevance: this.parseRelevance(element, options.relevance),
-      lineHeightRatio: options.lineHeightRatio || 1.2,
-      minFontSize: options.minFontSize || 8,
+      lineHeightRatio: options.lineHeightRatio || 1,
+      minFontSize: options.minFontSize || 14,
       maxFontSize: options.maxFontSize || 1000,
       ...options
     };
