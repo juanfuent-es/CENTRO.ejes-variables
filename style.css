@@ -9,6 +9,7 @@
     --orange: #ff6500;
     --pink: #ff0081;
     --green: #00ff06;
+    --font: 'Google Sans Flex', sans-serif;
 }
 
 @font-face {
@@ -21,12 +22,16 @@
 }
 
 body {
-    font-family: 'Google Sans Flex', sans-serif;
+    font-family: var(--font);
     background-color: #1a1a1a;
     color: #ffffff;
     padding: 0;
     margin: 0;
     overflow-x: hidden;
+}
+
+a {
+    color: var(--yellow);
 }
 
 .container {
@@ -38,18 +43,18 @@ body {
 }
 
 .fit-text-container {
-    font-family: 'Google Sans Flex', sans-serif;
-    --font-variation-wght: 500;
-    --font-variation-wdth: 100;
-    --font-variation-slnt: 0;
-    --font-variation-GRAD: 0;
-    --font-variation-ROND: 0;
+    font-family: var(--font);
+    --wght: 500;
+    --wdth: 100;
+    --slnt: 0;
+    --GRAD: 0;
+    --ROND: 0;
     font-variation-settings: 
-        'wght' var(--font-variation-wght),
-        'wdth' var(--font-variation-wdth),
-        'slnt' var(--font-variation-slnt),
-        'GRAD' var(--font-variation-GRAD),
-        'ROND' var(--font-variation-ROND);
+        'wght' var(--wght),
+        'wdth' var(--wdth),
+        'slnt' var(--slnt),
+        'GRAD' var(--GRAD),
+        'ROND' var(--ROND);
     line-height: 1;
     white-space: nowrap;
     width: auto;
@@ -61,6 +66,7 @@ body {
     position: relative;
     justify-content: space-between;
     align-items: center;
+    text-transform: uppercase;
 }
 
 .fit-text-container.fit-text-flex {
@@ -71,6 +77,12 @@ body {
 
 .fit-text-container > span {
     display: inline-block;
+    font-variation-settings: 
+        'wght' var(--wght),
+        'wdth' var(--wdth),
+        'slnt' var(--slnt),
+        'GRAD' var(--GRAD),
+        'ROND' var(--ROND);
 }
 
 .example-container-1 {

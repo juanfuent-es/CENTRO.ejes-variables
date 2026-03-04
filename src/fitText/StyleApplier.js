@@ -19,19 +19,19 @@ export default class StyleApplier {
 
     // Aplicar variables CSS individuales
     if (typeof axes.wght === 'number') {
-      container.style.setProperty('--font-variation-wght', axes.wght);
+      container.style.setProperty('--wght', axes.wght);
     }
     if (typeof axes.GRAD === 'number') {
-      container.style.setProperty('--font-variation-GRAD', axes.GRAD);
+      container.style.setProperty('--GRAD', axes.GRAD);
     }
     if (typeof axes.wdth === 'number') {
-      container.style.setProperty('--font-variation-wdth', axes.wdth);
+      container.style.setProperty('--wdth', axes.wdth);
     }
     if (typeof axes.slnt === 'number') {
-      container.style.setProperty('--font-variation-slnt', axes.slnt);
+      container.style.setProperty('--slnt', axes.slnt);
     }
     if (typeof axes.ROND === 'number') {
-      container.style.setProperty('--font-variation-ROND', axes.ROND);
+      container.style.setProperty('--ROND', axes.ROND);
     }
 
     // Asegurar que la familia de fuente esté aplicada
@@ -56,11 +56,11 @@ export default class StyleApplier {
     if (!container) return;
 
     container.style.fontSize = '';
-    container.style.setProperty('--font-variation-wght', '');
-    container.style.setProperty('--font-variation-GRAD', '');
-    container.style.setProperty('--font-variation-wdth', '');
-    container.style.setProperty('--font-variation-slnt', '');
-    container.style.setProperty('--font-variation-ROND', '');
+    container.style.setProperty('--wght', '');
+    container.style.setProperty('--GRAD', '');
+    container.style.setProperty('--wdth', '');
+    container.style.setProperty('--slnt', '');
+    container.style.setProperty('--ROND', '');
 
     if (container._originalStyles) {
       delete container._originalStyles;

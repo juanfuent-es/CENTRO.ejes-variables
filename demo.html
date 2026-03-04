@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitText - Ejes Variables</title>
+    <!--
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,GRAD,ROND@6..144,-10..0,25..151,1..1000,0..100,0..100&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/dist/lil-gui.umd.min.js"></script>
+    -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>FitText - Ajuste de Texto con Fuentes Variables</h1>
+
+    <div class="info">
+        <p>Este ejemplo demuestra el uso de FitText para ajustar texto usando Google Sans Flex con 6 ejes variables.</p>
+        <p>Usa los controles GUI para ajustar Slant y Roundness en tiempo real.</p>
+    </div>
+
+    <div class="container example-container-1">
+        <h1 class="fit-text-container" data-relevance="1">LECHERÍA</h1>
+    </div>
+
+    <div class="container example-container-2">
+        <h2 class="fit-text-container" data-relevance="1">PERINORTE</h2>
+    </div>
+
+    <div class="container example-container-3">
+        <h3 class="fit-text-container" data-relevance="1">CDMX</h3>
+    </div>
+
+    <div class="container example-container-4">
+        <h3 class="fit-text-container" data-relevance=".8">Si a tus hijos sacas a pasear</h3>
+    </div>
+    <div class="container example-container-4">
+        <h3 class="fit-text-container" data-relevance=".8">su pasaje debes de pagar</h3>
+    </div>
+
+    <script src="./lib/lil-gui.umd.min.js"></script>
+    <script type="module" src="./js/fit-text.js"></script>
+</body>
+</html>

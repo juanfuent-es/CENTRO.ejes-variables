@@ -1,0 +1,65 @@
+/* ==================================================
+   HERO SECTION · MINIMAL STYLE
+   Complemento de style.css para jerarquía visual
+   ================================================== */
+
+.hero {
+    display: block;
+    padding: 4rem 0;
+    text-align: center;
+    /* El ancho está controlado por el contenedor main en style.css */
+}
+
+.hero > header > h1 {
+    font-size: 3.5rem;
+    /* Ajuste para destacar más que el H1 estándar */
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.hero p {
+    max-width: 60ch;
+    margin: 0 auto;
+    font-size: 1.25rem;
+}
+
+
+.hero > header > p {
+    display: inline;
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid currentColor;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.hero > p + p {
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+.hero nav {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 3rem;
+    padding: 0;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.hero > nav > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid currentColor;
+    text-decoration: none;
+}
+
+.hero > nav > a:hover,
+.hero > nav > a:focus-visible {
+    border-color: #222;
+}
