@@ -4,23 +4,27 @@
    ================================================== */
 
 .hero {
-    display: block;
-    padding: 4rem 0;
+    display: flex;
+    padding: 1rem;
     text-align: center;
-    /* El ancho está controlado por el contenedor main en style.css */
+    height: 100dvh;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
 }
 
 .hero h1 {
-    font-size: min(11vw, 150px);
-    margin: 1rem 0;
-    line-height: 0.9em;
+    font-size: min(11vw, 130px);
+    margin: 0;
     text-transform: uppercase;
     display: flex;
     line-height: .95em;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: .5em;
+    padding: 1rem 0;
 }
 
 .fit-text-container:first-child {
@@ -35,22 +39,24 @@
     max-width: 60ch;
     margin: 0 auto;
     font-size: 1.25rem;
+    letter-spacing: 1px;
 }
 
 
 .hero>header>p {
     display: inline;
     margin: 0;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid currentColor;
     font-size: 0.85rem;
     letter-spacing: 0.06em;
-    text-transform: uppercase;
+    opacity: 0.8;
+    letter-spacing: 0;
 }
 
 .hero>p+p {
+    letter-spacing: 0;
     margin-top: 1rem;
     font-size: 1rem;
+    text-transform: none;
 }
 
 .hero nav {
@@ -59,7 +65,7 @@
     margin-top: 3rem;
     padding: 0;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 .hero a {
@@ -72,9 +78,9 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    border: 2px solid currentColor;
     text-decoration: none;
     text-transform: uppercase;
+    color: var(--bg);
     font-variation-settings: 'wght' var(--wght),
         'wdth' var(--wdth),
         'slnt' var(--slnt),
