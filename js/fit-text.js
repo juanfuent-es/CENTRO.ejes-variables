@@ -1,36 +1,39 @@
 import FitText from '../src/FitText.js';
 import { GUIController } from '../src/fitText/GUIController.js';
+import GoogleSansFlexStrategy from '../src/fitText/GoogleSansFlexStrategy.js';
 
-// Crear GUI para controlar slant y roundness
+// Instanciar la estrategia específica para esta tipografía
+const strategy = new GoogleSansFlexStrategy();
+
+// Crear GUI para controlar los ejes
 const gui = new window.lil.GUI();
+
 // Inicializar FitText para todos los elementos con la clase
 const htmlElements = document.querySelectorAll('.fit-text-container');
 let fitTextElements = [];
 
 htmlElements.forEach((item, idx) => {
-    console.log(idx)
-    const fitText = new FitText(item);
+    const fitText = new FitText(item, { strategy });
     fitText.fit();
-    fitTextElements.push(fitText)
-    //
-    // GUI controlará todas las instancia de FitText
-    console.log("fitText", fitText)
+    fitTextElements.push(fitText);
+    
+    // El GUI controlará las instancias
     const guiController = new GUIController(gui, {
-        fitTextInstance: fitText, // Principal
-        initialSlant: -5,
-        initialRoundness: 0,
+        fitTextInstance: fitText,
         onUpdate: (values) => {
-            // Actualizar todas las instancias cuando cambien los valores GUI
-            fitText.update({ slnt: values.slnt, ROND: values.ROND });
+            // Sincronizar otros si se desea
+            fitTextElements.forEach(ft => {
+                if (ft !== fitText) ft.update(values);
+            });
         }
     });
-})
+});
 
 // Manejar redimensionamiento de ventana
 let resizeTimeout;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-        // fitText.fit();
+        fitTextElements.forEach(ft => ft.fit());
     }, 100);
 });

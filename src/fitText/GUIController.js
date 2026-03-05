@@ -13,53 +13,62 @@ export class GUIController {
     this.gui = guiInstance;
     this.fitTextInstance = options.fitTextInstance || null;
     this.onUpdateCallback = options.onUpdate || null;
-
-    // Valores iniciales
-    this.values = {
-      slnt: options.initialSlant ?? -5,
-      ROND: options.initialRoundness ?? 0
-    };
-
-    // Rangos de ejes
-    this.ranges = {
-      slnt: { min: -10, max: 0 },
-      ROND: { min: 0, max: 100 }
-    };
+    this.values = {};
+    this.controllers = {};
 
     // Crear controles GUI
     this.createControls();
   }
 
   /**
-   * Crea los controles GUI para slant y roundness
+   * Crea los controles GUI para todos los ejes de la estrategia
    */
   createControls() {
-    // Folder para controles de FitText
-    const folder = this.gui.addFolder('FitText Variables');
-    folder.open();
+    if (!this.fitTextInstance || !this.fitTextInstance.strategy) return;
 
-    // Control de Slant (Inclinación)
-    const slntController = folder
-      .add(this.values, 'slnt', this.ranges.slnt.min, this.ranges.slnt.max, 0.1)
-      .name('Slant (Inclinación)')
-      .onChange(value => {
-        this.values.slnt = value;
-        this.handleChange();
-      });
+    const strategy = this.fitTextInstance.strategy;
+    const ranges = strategy.getAxisRanges();
+    const currentAxes = this.fitTextInstance.getAxes();
+    const options = this.fitTextInstance.options;
 
-    // Control de Roundness (Redondez)
-    const rondController = folder
-      .add(this.values, 'ROND', this.ranges.ROND.min, this.ranges.ROND.max, 1)
-      .name('Roundness (Redondez)')
-      .onChange(value => {
-        this.values.ROND = value;
-        this.handleChange();
-      });
+    const fontFolder = this.gui.addFolder('Fuente Variable');
+    fontFolder.open();
 
-    this.controllers = {
-      slnt: slntController,
-      ROND: rondController
+    this.controllers = {};
+    this.values = { 
+      ...currentAxes,
+      noiseIntensity: options.noiseIntensity,
+      noiseSeed: options.noiseSeed
     };
+
+    Object.entries(ranges).forEach(([tag, range]) => {
+      const controller = fontFolder
+        .add(this.values, tag, range.min, range.max, tag === 'wght' ? 1 : 0.1)
+        .name(tag.toUpperCase())
+        .onChange(value => {
+          this.values[tag] = value;
+          this.handleChange();
+        });
+      
+      this.controllers[tag] = controller;
+    });
+
+    const noiseFolder = this.gui.addFolder('Configuración Noise');
+    noiseFolder.open();
+
+    noiseFolder.add(this.values, 'noiseIntensity', 0, 1, 0.01)
+      .name('Intensidad Ruido')
+      .onChange(value => {
+        this.values.noiseIntensity = value;
+        this.handleChange();
+      });
+
+    noiseFolder.add(this.values, 'noiseSeed', 0, 10, 0.01)
+      .name('Seed / Time')
+      .onChange(value => {
+        this.values.noiseSeed = value;
+        this.handleChange();
+      });
   }
 
   /**
@@ -67,17 +76,11 @@ export class GUIController {
    */
   handleChange() {
     if (this.fitTextInstance) {
-      this.fitTextInstance.update({
-        slnt: this.values.slnt,
-        ROND: this.values.ROND
-      });
+      this.fitTextInstance.update(this.values);
     }
 
     if (this.onUpdateCallback) {
-      this.onUpdateCallback({
-        slnt: this.values.slnt,
-        ROND: this.values.ROND
-      });
+      this.onUpdateCallback(this.values);
     }
   }
 

@@ -10,13 +10,23 @@
     /* El ancho está controlado por el contenedor main en style.css */
 }
 
-.hero > header > h1 {
-    font-size: 3.5rem;
-    /* Ajuste para destacar más que el H1 estándar */
+.hero h1 {
+    font-size: min(15vw, 180px);
+    /* Limit max size to avoid overflow */
     margin-top: 1rem;
+    min-height: 20vh;
+    line-height: 0.9em;
     margin-bottom: 0.75rem;
     letter-spacing: -0.02em;
     text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-char {
+    display: inline-block;
 }
 
 .hero p {
@@ -26,7 +36,7 @@
 }
 
 
-.hero > header > p {
+.hero>header>p {
     display: inline;
     margin: 0;
     padding: 0.25rem 0.5rem;
@@ -36,7 +46,7 @@
     text-transform: uppercase;
 }
 
-.hero > p + p {
+.hero>p+p {
     margin-top: 1rem;
     font-size: 1rem;
 }
@@ -50,7 +60,7 @@
     justify-content: space-around;
 }
 
-.hero > nav > a {
+.hero>nav>a {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -59,7 +69,7 @@
     text-decoration: none;
 }
 
-.hero > nav > a:hover,
-.hero > nav > a:focus-visible {
+.hero>nav>a:hover,
+.hero>nav>a:focus-visible {
     border-color: #222;
 }

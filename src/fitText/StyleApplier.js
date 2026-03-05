@@ -17,21 +17,20 @@ export default class StyleApplier {
   applyAxisValues(container, axes = {}) {
     if (!container) return;
 
-    // Aplicar variables CSS individuales
-    if (typeof axes.wght === 'number') {
-      container.style.setProperty('--wght', axes.wght);
-    }
-    if (typeof axes.GRAD === 'number') {
-      container.style.setProperty('--GRAD', axes.GRAD);
-    }
-    if (typeof axes.wdth === 'number') {
-      container.style.setProperty('--wdth', axes.wdth);
-    }
-    if (typeof axes.slnt === 'number') {
-      container.style.setProperty('--slnt', axes.slnt);
-    }
-    if (typeof axes.ROND === 'number') {
-      container.style.setProperty('--ROND', axes.ROND);
+    // Apply specific CSS variables for each axis provided
+    Object.entries(axes).forEach(([tag, value]) => {
+      if (typeof value === 'number') {
+        container.style.setProperty(`--${tag}`, value);
+      }
+    });
+
+    // Also apply font-variation-settings for broader compatibility
+    const variationString = Object.entries(axes)
+      .map(([tag, value]) => `"${tag}" ${value}`)
+      .join(', ');
+    
+    if (variationString) {
+      container.style.fontVariationSettings = variationString;
     }
 
     // Asegurar que la familia de fuente esté aplicada
@@ -56,11 +55,12 @@ export default class StyleApplier {
     if (!container) return;
 
     container.style.fontSize = '';
-    container.style.setProperty('--wght', '');
-    container.style.setProperty('--GRAD', '');
-    container.style.setProperty('--wdth', '');
-    container.style.setProperty('--slnt', '');
-    container.style.setProperty('--ROND', '');
+    container.style.fontVariationSettings = '';
+    
+    // Clear common variables
+    ['wght', 'GRAD', 'wdth', 'slnt', 'ROND', 'opsz'].forEach(tag => {
+      container.style.setProperty(`--${tag}`, '');
+    });
 
     if (container._originalStyles) {
       delete container._originalStyles;

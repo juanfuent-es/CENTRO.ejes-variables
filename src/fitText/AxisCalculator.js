@@ -4,16 +4,9 @@
  */
 
 export default class AxisCalculator {
-  constructor(options = {}) {
-    // Rangos de ejes para Google Sans Flex
-    this.axisRanges = {
-      wght: { min: 1, max: 1000, default: 400 },
-      GRAD: { min: 0, max: 100, default: 0 },
-      wdth: { min: 25, max: 151, default: 100 },
-      slnt: { min: -10, max: 0, default: 0 },
-      ROND: { min: 0, max: 100, default: 0 },
-      opsz: { min: 6, max: 144, default: 14 } // Automático en CSS, pero incluido para referencia
-    };
+  constructor(strategy, options = {}) {
+    this.strategy = strategy;
+    this.axisRanges = strategy.getAxisRanges();
 
     // Configuración
     this.lineHeightRatio = options.lineHeightRatio || 1.2;
