@@ -37,7 +37,6 @@ class HeroEffect {
             });
         });
 
-        // this.animate(performance.now());
         this.render(performance.now());
     }
 
@@ -52,12 +51,10 @@ class HeroEffect {
             
             this.render(now);
             
-            // Debug FPS calculation
+            // Debug FPS calculation (optional, keeping local state)
             this.frameCount++;
             const sinceLastUpdate = now - this.lastFpsUpdate;
             if (sinceLastUpdate >= 1000) {
-                const actualFps = Math.round((this.frameCount * 1000) / sinceLastUpdate);
-                this.debugEl.innerText = `JS Updates/s: ${actualFps} (Target: ${this.fps})`;
                 this.frameCount = 0;
                 this.lastFpsUpdate = now;
             }
@@ -71,18 +68,20 @@ class HeroEffect {
             const { element, seed, phase } = charObj;
             const t = time + phase;
             
-            const wght = this.lerpExtreme(1, 1000, (Math.sin(t * 1.5 + seed * 0.7) + 1) / 2);
+            const wght = this.lerpExtreme(50, 1000, (Math.sin(t * 1.5 + seed * 0.7) + 1) / 2);
             const wdth = this.lerpExtreme(25, 151, (Math.cos(t * 1.2 + seed * 0.3) + 1) / 2);
             const grad = this.lerpExtreme(0, 100, (Math.sin(t * 2.5 + seed * 0.9) + 1) / 2);
-            const rond = this.lerpExtreme(0, 100, (Math.cos(t * 0.9 + seed * 1.1) + 1) / 2);
+            const rond = this.lerpExtreme(0, 50, (Math.cos(t * 0.9 + seed * 1.1) + 1) / 2);
             const opsz = this.lerpExtreme(6, 144, (Math.sin(t * 0.6 + seed * 1.4) + 1) / 2);
+            const slnt = this.lerpExtreme(-10, 0, (Math.sin(t * 1.1 + seed * 0.5) + 1) / 2);
 
             element.style.fontVariationSettings = `
                 "wght" ${wght}, 
                 "wdth" ${wdth}, 
                 "GRAD" ${grad}, 
                 "ROND" ${rond}, 
-                "opsz" ${opsz}
+                "opsz" ${opsz},
+                "slnt" ${slnt}
             `;
         });
     }

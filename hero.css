@@ -11,18 +11,20 @@
 }
 
 .hero h1 {
-    font-size: min(15vw, 180px);
-    /* Limit max size to avoid overflow */
-    margin-top: 1rem;
-    min-height: 20vh;
+    font-size: min(11vw, 150px);
+    margin: 1rem 0;
     line-height: 0.9em;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
     text-transform: uppercase;
     display: flex;
+    line-height: .95em;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: .5em;
+}
+
+.fit-text-container:first-child {
+    font-size: min(14vw, 200px);
 }
 
 .hero-char {
@@ -60,16 +62,37 @@
     justify-content: space-around;
 }
 
-.hero>nav>a {
+.hero a {
+    --wght: 400;
+    --wdth: 90;
+    --slnt: 0;
+    --GRAD: 0;
+    --ROND: 30;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    border: 1px solid currentColor;
+    border: 2px solid currentColor;
     text-decoration: none;
+    text-transform: uppercase;
+    font-variation-settings: 'wght' var(--wght),
+        'wdth' var(--wdth),
+        'slnt' var(--slnt),
+        'GRAD' var(--GRAD),
+        'ROND' var(--ROND);
+    transition: all 0.3s ease-in-out;
+    width: 200px;
+    text-align: center;
+    justify-content: center;
+    border-radius: 1em;
 }
 
-.hero>nav>a:hover,
-.hero>nav>a:focus-visible {
-    border-color: #222;
+.hero a:hover,
+.hero a:focus-visible {
+    border-radius: 0;
+    --wght: 900;
+    --wdth: 150;
+    --slnt: -10;
+    --GRAD: 10;
+    --ROND: 0;
 }
