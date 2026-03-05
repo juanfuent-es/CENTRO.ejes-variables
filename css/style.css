@@ -20,7 +20,7 @@
 
 @font-face {
     font-family: 'Google Sans Flex';
-    src: url('./fonts/GoogleSansFlex.ttf') format('truetype');
+    src: url('../fonts/GoogleSansFlex.ttf') format('truetype');
     font-style: oblique 0deg 10deg;
     font-weight: 1 1000;
     font-stretch: 25% 151%;
@@ -40,7 +40,7 @@ a {
     background-color: var(--accent);
 }
 
-.fit-text-container {
+.letrero {
     font-family: var(--font);
     --wght: 500;
     --wdth: 100;
@@ -64,13 +64,13 @@ a {
     text-transform: uppercase;
 }
 
-.fit-text-container.fit-text-flex {
+.letrero {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.fit-text-container>span {
+.letrero>span {
     display: inline-block;
     font-variation-settings:
         'wght' var(--wght),

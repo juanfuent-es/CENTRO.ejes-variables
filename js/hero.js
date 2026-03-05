@@ -38,6 +38,7 @@ class HeroEffect {
         });
 
         this.render(performance.now());
+        // this.animate(performance.now());
     }
 
     animate(now) {
@@ -102,5 +103,5 @@ class HeroEffect {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Default to 8fps as requested by user manually previously
-    new HeroEffect('.hero h1 .title', 8);
+    new HeroEffect('.hero h1 .letrero', 8);
 });

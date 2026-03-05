@@ -1,0 +1,39 @@
+:root {
+    --bg: var();
+    --bg: var(--yellow);
+    --color: var(--text);
+}
+
+.hero {
+    max-width: 1540px;
+    width: 90%;
+}
+
+.hero h1 {
+    font-size: min(11vw, 60px);
+}
+
+.letrero {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.letrero:first-child {
+    font-size: min(14vw, 111px);
+}
+
+.hero p {
+    margin: 0;
+    margin-top: 1em;
+    max-width: 66ch;
+    text-align: left;
+    color: inherit
+}
+
+a.primary-btn,
+a.secondary-btn {
+    text-transform: none;
+    display: block;
+    margin: 1em 0;
+}
