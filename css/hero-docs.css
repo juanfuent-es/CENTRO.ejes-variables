@@ -4,6 +4,14 @@
     --color: var(--text);
 }
 
+body {
+    background-image: none;
+}
+
+main {
+    background-color: #ffe600a8;
+}
+
 .hero {
     max-width: 1540px;
     width: 90%;
@@ -11,17 +19,29 @@
 
 .hero h1 {
     font-size: min(11vw, 60px);
+    text-align: center;
+    max-width: 1240px;
+    margin: 0 auto;
 }
 
 .letrero {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
+    font-size: min(14vw, 135px);
+    text-shadow: 3px 3px 0px var(--color);
 }
 
-.letrero:first-child {
-    font-size: min(14vw, 111px);
+.letrero:nth-child(2) {
+    font-size: min(14vw, 135px);
+    color: var(--yellow);
 }
+
+.letrero:nth-child(3) {
+    font-size: min(14vw, 135px);
+    color: var(--yellow);
+}
+
 
 .hero p {
     margin: 0;

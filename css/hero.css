@@ -2,16 +2,25 @@
    HERO SECTION · MINIMAL STYLE
    Complemento de style.css para jerarquía visual
    ================================================== */
+body {
+    background-image: url(../img/ejes-variables-bg-b.jpg);
+}
+
+main {
+    width: 100%;
+    min-height: 100vh;
+    background: rgb(0 0 0 / 80%);
+}
 
 .hero {
     display: flex;
     padding: 1rem;
     text-align: center;
-    height: 100dvh;
+    min-height: 100dvh;
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    max-width: 1024px;
+    max-width: 1240px;
     margin: 0 auto;
 }
 
@@ -29,6 +38,7 @@
 
 .letrero:first-child {
     font-size: min(14vw, 200px);
+    color: var(--yellow);
 }
 
 .hero-char {
@@ -36,13 +46,13 @@
 }
 
 .hero p {
-    max-width: 80ch;
+    max-width: 65ch;
     font-size: 1.5rem;
     letter-spacing: 0;
     margin: 1rem auto;
     text-transform: none;
     line-height: 1.5em;
-    text-wrap-style: auto;
+    text-wrap-style: balance;
     color: var(--white);
 }
 
@@ -82,7 +92,7 @@
         'GRAD' var(--GRAD),
         'ROND' var(--ROND);
     transition: all 0.3s ease-in-out;
-    width: 200px;
+    width: 250px;
     text-align: center;
     justify-content: center;
     border-radius: 1em;
@@ -94,8 +104,8 @@
     border: 2px solid currentColor;
 }
 
-.primary-btn:hover,
-.primary-btn:focus-visible {
+a:hover,
+a:focus-visible {
     border-radius: 0;
     --wght: 900;
     --wdth: 150;

@@ -103,5 +103,5 @@ class HeroEffect {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Default to 8fps as requested by user manually previously
-    new HeroEffect('.hero h1 .letrero', 8);
+    new HeroEffect('.letrero', 8);
 });
